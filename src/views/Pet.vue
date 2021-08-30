@@ -1,3 +1,6 @@
 <template>
-  <div>Pet</div>
+  <div>
+    {{ this.$route.params.species }}
+    {{ this.$route.params.id }}
+  </div>
 </template>
