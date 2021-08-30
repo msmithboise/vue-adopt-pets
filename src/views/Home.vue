@@ -1,9 +1,11 @@
 <template>
   <div class="home">
     <h1>Adopt a new best friend.</h1>
+    {{ animalsCount }}
+    {{ getAllCats.length }}
     <button @click="togglePetForm" class="btn btn-primary">Add New Pet</button>
 
-    <b-form @submit="handleSubmit" v-if="showPetForm">
+    <b-form @submit.prevent="handleSubmit" v-if="showPetForm">
       <b-form-group id="input-group-2" label="Pet's Name:" label-for="input-2">
         <b-form-input
           id="input-2"
@@ -35,13 +37,11 @@
       <b-button type="submit" variant="primary">Submit</b-button>
       <b-button type="reset" variant="danger">Reset</b-button>
     </b-form>
-    <b-card class="mt-3" header="Form Data Result">
-      <pre class="m-0">{{ form }}</pre>
-    </b-card>
   </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "home",
   data() {
@@ -54,11 +54,28 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapGetters(["animalsCount", "getAllCats"]),
+  },
   methods: {
+    ...mapActions(["addPet"]),
     togglePetForm() {
       this.showPetForm = !this.showPetForm;
     },
-    handleSubmit() {},
+    handleSubmit() {
+      const { species, age, name } = this.formData;
+      const payload = {
+        species,
+        pet: {
+          name,
+          age,
+        },
+      };
+      this.addPet(payload);
+
+      // reset form after submit
+      this.formData = { name: "", age: 0, species: null };
+    },
   },
 };
 </script>
